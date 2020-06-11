@@ -78,34 +78,40 @@ library(dplyr)
 base_url_1 <- 'https://records.nhl.com/site/api'
 
 api <- function(path){
-  GET(paste0(base_url_1, "/", path)) %>%
+ json_1 <- GET(paste0(base_url_1, "/", path)) %>%
     content('text') %>%
     fromJSON(flatten = TRUE) 
+ 
+ attributes(json_1)
+ return((json_1)$data)
 }
 
 # Table for /frachise
-api('franchise')
+api('franchise') %>% head()
 
 # Table for /franchise-team-totals
-api('franchise-team-totals')
+api('franchise-team-totals') %>% head()
 
 # A function for the last three calls
 base_url_2 <- 'https://records.nhl.com/site/api/franchise'
 
 ID <- function(arg1, arg2){
-  GET(paste0(
+ json_2 <- GET(paste0(
     base_url_2, "-", arg1, '-records?cayenneExp=franchiseId=', arg2)) %>%
     content('text') %>%
-    fromJSON(flatten = TRUE) 
+    fromJSON(flatten = TRUE)
+ 
+ attributes(json_2)
+ return((json_2)$data)
 }
 # Table for /franchise-season-records?cayenneExp=franchiseId=ID
-ID('season', '12')
+ID('season', '12') %>% head()
 
 # Table for /franchise-goalie-records?cayenneExp=franchiseId=ID
-ID('goalie', '12')
+ID('goalie', '12') %>% head()
 
 # Table for //franchise-skater-records?cayenneExp=franchiseId=ID
-ID('skater', '12')
+ID('skater', '12') %>% head()
 
 ```
 
@@ -116,7 +122,6 @@ ID('skater', '12')
 # Load the libraries
 library(DT)
 library(knitr)
-library(tidyverse)
 library(ggplot2)
 ```
 
