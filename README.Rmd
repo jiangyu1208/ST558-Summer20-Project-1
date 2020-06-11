@@ -67,11 +67,127 @@ I am going to choose the package 'jsonlite' since it is the fastest among these 
 
 # 3. Write Functions to Contact the NHL Records
 
+```{r, message=FALSE}
+# Load the libraries
+library(httr)
+library(jsonlite)
+library(dplyr)
+
+# The full_url for the first call
+
+full_url <- 'https://records.nhl.com/site/api/franchise'
+
+# Use a GET command to retrieve the franchise information in raw form
+franchise <- GET(full_url)
+# franchise
+
+# Use 'content' to turn it into JSON text form
+frc_text <- content(franchise, "text")
+# Use 'fromJSON' with 'flatten = TRUE' to convert it to a list
+frc_json <- fromJSON(frc_text, flatten = TRUE)
+
+# Access the data
+attributes(frc_json)
+frc_json$data %>% head()
+frc_json$total
 
 
+```
+
+```{r}
+# Start with a base_URL and paste the pieces together
+
+full_url <- 'https://records.nhl.com/site/api/franchise-team-totals'
+
+# Use a GET command to retrieve the franchise information in raw form
+franchise_team <- GET(full_url)
+franchise_team
+
+# Use 'content' to turn it into JSON text form
+frc_team_text <- content(franchise_team, "text")
+# Use 'fromJSON' with 'flatten = TRUE' to convert it to a list
+frc_team_json <- fromJSON(frc_team_text, flatten = TRUE)
+
+# Access the data
+attributes(frc_team_json)
+frc_team_json$data
+frc_team_json$total
+
+```
+
+
+```{r}
+# Start with a base_URL and paste the pieces together
+
+full_url <- 
+  'https://records.nhl.com/site/api/franchise-season-records?cayenneExp=franchiseId=12'
+
+# Use a GET command to retrieve the franchise information in raw form
+franchise_team <- GET(full_url)
+franchise_team
+
+# Use 'content' to turn it into JSON text form
+frc_team_text <- content(franchise_team, "text")
+# Use 'fromJSON' with 'flatten = TRUE' to convert it to a list
+frc_team_json <- fromJSON(frc_team_text, flatten = TRUE)
+
+# Access the data
+attributes(frc_team_json)
+frc_team_json$data
+frc_team_json$total
+```
+
+```{r}
+# Start with a base_URL and paste the pieces together
+
+full_url <- 
+  'https://records.nhl.com/site/api/franchise-goalie-records?cayenneExp=franchiseId=10'
+
+# Use a GET command to retrieve the franchise information in raw form
+franchise_team <- GET(full_url)
+franchise_team
+
+# Use 'content' to turn it into JSON text form
+frc_team_text <- content(franchise_team, "text")
+# Use 'fromJSON' with 'flatten = TRUE' to convert it to a list
+frc_team_json <- fromJSON(frc_team_text, flatten = TRUE)
+
+# Access the data
+attributes(frc_team_json)
+frc_team_json$data
+frc_team_json$total
+```
+
+```{r}
+# Start with a base_URL and paste the pieces together
+
+full_url <- 
+  'https://records.nhl.com/site/api/franchise-skater-records?cayenneExp=franchiseId=10'
+
+# Use a GET command to retrieve the franchise information in raw form
+franchise_team <- GET(full_url)
+franchise_team
+
+# Use 'content' to turn it into JSON text form
+frc_team_text <- content(franchise_team, "text")
+# Use 'fromJSON' with 'flatten = TRUE' to convert it to a list
+frc_team_json <- fromJSON(frc_team_text, flatten = TRUE)
+
+# Access the data
+attributes(frc_team_json)
+frc_team_json$data
+frc_team_json$total
+```
 
 
 
 # 4. Data Analysis
 
+```{r, messagae=FALSE}
+# Load the libraries
+library(DT)
+library(knitr)
+library(tidyverse)
+library(ggplot2)
+```
 
