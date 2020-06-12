@@ -346,3 +346,64 @@ knitr::kable(
 | Non-Active |   1663 |        660 |       1003 |
 
 Detailed Losses for Game Type 2
+
+``` r
+# Table about the wins data for game type = 3
+wins3_a <- id_3 %>% select(activeFranchise,wins, homeWins, roadWins) %>%
+  filter(activeFranchise == 'Active') %>% 
+  summarise(
+    Wins = sum(wins), HomeWins = sum(homeWins), RoadWins = sum(roadWins))
+
+wins3_non <- id_3 %>% select(activeFranchise,wins, homeWins, roadWins) %>%
+  filter(activeFranchise == 'Non-Active') %>% 
+  summarise(
+    Wins = sum(wins), HomeWins = sum(homeWins), RoadWins = sum(roadWins))
+
+table_type_3_win <- data.frame(
+  Status = c('Active', 'Non-Active'), Wins = c(4375, 48), HomeWins = c(2505, 21), RoadWins = c(1870, 27))
+
+knitr::kable(
+  (table_type_3_win),
+  caption = 'Detailed Wins for Game Type 3 '
+  )
+```
+
+| Status     | Wins | HomeWins | RoadWins |
+| :--------- | ---: | -------: | -------: |
+| Active     | 4375 |     2505 |     1870 |
+| Non-Active |   48 |       21 |       27 |
+
+Detailed Wins for Game Type 3
+
+``` r
+# Table about the loss data for game type = 3
+loss3_a <- id_3 %>% select(activeFranchise,losses, homeLosses, roadLosses) %>%
+  filter(activeFranchise == 'Active') %>% 
+  summarise(
+    Losses = sum(losses), HomeLosses = sum(homeLosses), RoadLosses = sum(roadLosses))
+
+loss3_non <- id_3 %>% 
+  select(activeFranchise,losses, homeLosses, roadLosses) %>%
+  filter(activeFranchise == 'Non-Active') %>% 
+  summarise(
+    Losses = sum(losses), HomeLosses = sum(homeLosses), RoadLosses = sum(roadLosses))
+
+table_type_3_loss <- data.frame(
+  Status = c('Active', 'Non-Active'), Losses = c(4352, 59), HomeLosses = c(1866, 27), RoadLosses = c(2486, 32))
+
+knitr::kable(
+  (table_type_3_loss),
+  caption = 'Detailed Losses for Game Type 3 '
+  )
+```
+
+| Status     | Losses | HomeLosses | RoadLosses |
+| :--------- | -----: | ---------: | ---------: |
+| Active     |   4352 |       1866 |       2486 |
+| Non-Active |     59 |         27 |         32 |
+
+Detailed Losses for Game Type 3
+
+``` r
+# 
+```
