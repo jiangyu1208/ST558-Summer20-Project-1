@@ -405,5 +405,28 @@ knitr::kable(
 Detailed Losses for Game Type 3
 
 ``` r
-# 
+# One Variables for 'activeFranchise' and 'type id'
+
+g1 <- ggplot(data = team_total, aes(x=activeFranchise))
+g1 + geom_bar(fill = 'green') +
+  labs(x = "Active Status") +
+  ggtitle("Bar Plot for Active Status")
 ```
+
+![](README_files/figure-gfm/unnamed-chunk-4-1.png)<!-- -->
+
+``` r
+g2 <- ggplot(data = team_total, aes(x=gameTypeId))
+g2 + geom_bar(fill = 'blue') +
+  labs(x = "Game Type ID") +
+  ggtitle("Bar Plot for Game Types")
+```
+
+![](README_files/figure-gfm/unnamed-chunk-4-2.png)<!-- -->
+
+From these two plots above, we can see that the number of ‘Active
+Franchise’ is much larger than that of ‘Non-Active Franchise’ and the
+number of game type 2 is slightly larger than that of game type 3.
+Therefore, when it comes to the data about the wins/losses, we can
+expexct that the number of ‘Active Franchise’ with game type ID should
+be the biggest one and we can explore it later.
