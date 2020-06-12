@@ -105,6 +105,7 @@ ID <- function(arg1, arg2){
  attributes(json_2)
  return(tbl_df(json_2$data))
 }
+
 # Table for /franchise-season-records?cayenneExp=franchiseId=ID
 ID('season', '12') %>% head()
 
@@ -125,15 +126,75 @@ library(tidyverse)
 library(knitr)
 library(ggplot2)
 
-# Create a new variable
+# Create some new variables, the percent of home wins/losses and road wins/losses
 team_total <- api('franchise-team-totals') %>%
-  select(-c(
-    'id', 'firstSeasonId', 'penaltyMinutes', 'pointPctg', 'points')) %>% mutate(HomeWinsPercent = homeWins/wins, HomeLossesPercent = homeLosses/losses, RoadWinsPercent = roadWins/wins, RoadLossesPercent = roadLosses/losses)
+  select(
+    -c('id', 'firstSeasonId', 'penaltyMinutes', 'pointPctg', 'points')) %>% 
+  mutate(HomeWinsPercent = homeWins/wins, 
+         HomeLossesPercent = homeLosses/losses, 
+         RoadWinsPercent = roadWins/wins, 
+         RoadLossesPercent = roadLosses/losses)
+
+
+# Convert activeFranchise and gameTypeId to factors and rename their with levels
+team_total$activeFranchise <- as.factor(team_total$activeFranchise)
+levels(team_total$activeFranchise) <- list('Active'= 1, 'Non-Active'= 0)
+
+team_total$gameTypeId <- as.factor(team_total$gameTypeId)
+levels(team_total$gameTypeId) <- list('Type 2'= 2, 'Type 3'= 3)
+
+# Select the rows of gameType ID = 2 and gameType ID = 3
+id_2 <- team_total[team_total$gameTypeId == 'Type 2', ]
+id_3 <- team_total[team_total$gameTypeId == 'Type 3', ]
 
 # Table about the preview of team total data
 knitr::kable(
  head(team_total),
   caption = 'Preview of Team Total Data')
+
+# Table about the ActiveFranchise vs Game Types
+knitr::kable(
+ table(team_total$activeFranchise, team_total$gameTypeId),
+  caption = 'ActiveFranchise vs Game Types')
+
+# Table about the wins data for game type = 2
+wins2_a <- id_2 %>% select(activeFranchise,wins, homeWins, roadWins) %>%
+  filter(activeFranchise == 'Active') %>% 
+  summarise(
+    Wins = sum(wins), HomeWins = sum(homeWins), RoadWins = sum(roadWins))
+
+wins2_non <- id_2 %>% select(activeFranchise,wins, homeWins, roadWins) %>%
+  filter(activeFranchise == 'Non-Active') %>% 
+  summarise(
+    Wins = sum(wins), HomeWins = sum(homeWins), RoadWins = sum(roadWins))
+
+table_type_2_win <- data.frame(
+  Status = c('Active', 'Non-Active'), Wins = c(50938, 1147), HomeWins = c(29436, 718), RoadWins = c(21502, 429))
+
+knitr::kable(
+  (table_type_2_win),
+  caption = 'Detailed Wins for Game Type 2 '
+  )
+
+# Table about the loss data for game type = 2
+loss2_a <- id_2 %>% select(activeFranchise,losses, homeLosses, roadLosses) %>%
+  filter(activeFranchise == 'Active') %>% 
+  summarise(
+    Losses = sum(losses), HomeLosses = sum(homeLosses), RoadLosses = sum(roadLosses))
+
+loss2_non <- id_2 %>% 
+  select(activeFranchise,losses, homeLosses, roadLosses) %>%
+  filter(activeFranchise == 'Non-Active') %>% 
+  summarise(
+    Losses = sum(losses), HomeLosses = sum(homeLosses), RoadLosses = sum(roadLosses))
+
+table_type_2_loss <- data.frame(
+  Status = c('Active', 'Non-Active'), Losses = c(45595, 1663), HomeLosses = c(18925, 660), RoadLosses = c(26670, 1003))
+
+knitr::kable(
+  (table_type_2_loss),
+  caption = 'Detailed Losses for Game Type 2 '
+  )
 
 ```
 

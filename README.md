@@ -154,6 +154,7 @@ ID <- function(arg1, arg2){
  attributes(json_2)
  return(tbl_df(json_2$data))
 }
+
 # Table for /franchise-season-records?cayenneExp=franchiseId=ID
 ID('season', '12') %>% head()
 ```
@@ -237,24 +238,110 @@ library(tidyverse)
 library(knitr)
 library(ggplot2)
 
-# Create a new variable
+# Create some new variables, the percent of home wins/losses and road wins/losses
 team_total <- api('franchise-team-totals') %>%
-  select(franchiseId, goalsAgainst, goalsFor, homeLosses, homeOvertimeLosses, homeTies, homeWins, roadLosses, roadOvertimeLosses, roadTies, roadWins, shootoutLosses, shootoutWins, shutouts, teamName, losses, overtimeLosses, ties, triCode, wins) %>% mutate(HomeWinsPercent = homeWins/wins, HomeLossesPercent = homeLosses/losses, RoadWinsPercent = roadWins/wins, RoadLossesPercent = roadLosses/losses)
+  select(
+    -c('id', 'firstSeasonId', 'penaltyMinutes', 'pointPctg', 'points')) %>% 
+  mutate(HomeWinsPercent = homeWins/wins, 
+         HomeLossesPercent = homeLosses/losses, 
+         RoadWinsPercent = roadWins/wins, 
+         RoadLossesPercent = roadLosses/losses)
+
+
+# Convert activeFranchise and gameTypeId to factors and rename their with levels
+team_total$activeFranchise <- as.factor(team_total$activeFranchise)
+levels(team_total$activeFranchise) <- list('Active'= 1, 'Non-Active'= 0)
+
+team_total$gameTypeId <- as.factor(team_total$gameTypeId)
+levels(team_total$gameTypeId) <- list('Type 2'= 2, 'Type 3'= 3)
+
+# Select the rows of gameType ID = 2 and gameType ID = 3
+id_2 <- team_total[team_total$gameTypeId == 'Type 2', ]
+id_3 <- team_total[team_total$gameTypeId == 'Type 3', ]
 
 # Table about the preview of team total data
-# Table about the preview of iris data
 knitr::kable(
  head(team_total),
   caption = 'Preview of Team Total Data')
 ```
 
-| franchiseId | goalsAgainst | goalsFor | homeLosses | homeOvertimeLosses | homeTies | homeWins | roadLosses | roadOvertimeLosses | roadTies | roadWins | shootoutLosses | shootoutWins | shutouts | teamName           | losses | overtimeLosses | ties | triCode | wins | HomeWinsPercent | HomeLossesPercent | RoadWinsPercent | RoadLossesPercent |
-| ----------: | -----------: | -------: | ---------: | -----------------: | -------: | -------: | ---------: | -----------------: | -------: | -------: | -------------: | -----------: | -------: | :----------------- | -----: | -------------: | ---: | :------ | ---: | --------------: | ----------------: | --------------: | ----------------: |
-|          23 |         8708 |     8647 |        507 |                 82 |       96 |      783 |        674 |                 80 |      123 |      592 |             79 |           78 |      193 | New Jersey Devils  |   1181 |            162 |  219 | NJD     | 1375 |       0.5694545 |         0.4292972 |       0.4305455 |         0.5707028 |
-|          23 |          634 |      697 |         53 |                  0 |       NA |       74 |         67 |                  0 |       NA |       63 |              0 |            0 |       25 | New Jersey Devils  |    120 |              0 |   NA | NJD     |  137 |       0.5401460 |         0.4416667 |       0.4598540 |         0.5583333 |
-|          22 |        11779 |    11889 |        674 |                 81 |      170 |      942 |        896 |                 78 |      177 |      714 |             67 |           82 |      167 | New York Islanders |   1570 |            159 |  347 | NYI     | 1656 |       0.5688406 |         0.4292994 |       0.4311594 |         0.5707006 |
-|          22 |          806 |      869 |         46 |                  1 |       NA |       84 |         78 |                  0 |       NA |       64 |              0 |            0 |        9 | New York Islanders |    124 |              0 |   NA | NYI     |  148 |       0.5675676 |         0.3709677 |       0.4324324 |         0.6290323 |
-|          10 |        19863 |    19864 |       1132 |                 73 |      448 |     1600 |       1561 |                 74 |      360 |     1256 |             66 |           78 |      403 | New York Rangers   |   2693 |            147 |  808 | NYR     | 2856 |       0.5602241 |         0.4203491 |       0.4397759 |         0.5796509 |
-|          10 |         1436 |     1400 |        103 |                  0 |        1 |      137 |        160 |                  0 |        7 |      107 |              0 |            0 |       44 | New York Rangers   |    263 |              0 |    8 | NYR     |  244 |       0.5614754 |         0.3916350 |       0.4385246 |         0.6083650 |
+| activeFranchise | franchiseId | gameTypeId | gamesPlayed | goalsAgainst | goalsFor | homeLosses | homeOvertimeLosses | homeTies | homeWins | lastSeasonId | losses | overtimeLosses | roadLosses | roadOvertimeLosses | roadTies | roadWins | shootoutLosses | shootoutWins | shutouts | teamId | teamName           | ties | triCode | wins | HomeWinsPercent | HomeLossesPercent | RoadWinsPercent | RoadLossesPercent |
+| :-------------- | ----------: | :--------- | ----------: | -----------: | -------: | ---------: | -----------------: | -------: | -------: | -----------: | -----: | -------------: | ---------: | -----------------: | -------: | -------: | -------------: | -----------: | -------: | -----: | :----------------- | ---: | :------ | ---: | --------------: | ----------------: | --------------: | ----------------: |
+| Active          |          23 | Type 2     |        2937 |         8708 |     8647 |        507 |                 82 |       96 |      783 |           NA |   1181 |            162 |        674 |                 80 |      123 |      592 |             79 |           78 |      193 |      1 | New Jersey Devils  |  219 | NJD     | 1375 |       0.5694545 |         0.4292972 |       0.4305455 |         0.5707028 |
+| Active          |          23 | Type 3     |         257 |          634 |      697 |         53 |                  0 |       NA |       74 |           NA |    120 |              0 |         67 |                  0 |       NA |       63 |              0 |            0 |       25 |      1 | New Jersey Devils  |   NA | NJD     |  137 |       0.5401460 |         0.4416667 |       0.4598540 |         0.5583333 |
+| Active          |          22 | Type 2     |        3732 |        11779 |    11889 |        674 |                 81 |      170 |      942 |           NA |   1570 |            159 |        896 |                 78 |      177 |      714 |             67 |           82 |      167 |      2 | New York Islanders |  347 | NYI     | 1656 |       0.5688406 |         0.4292994 |       0.4311594 |         0.5707006 |
+| Active          |          22 | Type 3     |         272 |          806 |      869 |         46 |                  1 |       NA |       84 |           NA |    124 |              0 |         78 |                  0 |       NA |       64 |              0 |            0 |        9 |      2 | New York Islanders |   NA | NYI     |  148 |       0.5675676 |         0.3709677 |       0.4324324 |         0.6290323 |
+| Active          |          10 | Type 2     |        6504 |        19863 |    19864 |       1132 |                 73 |      448 |     1600 |           NA |   2693 |            147 |       1561 |                 74 |      360 |     1256 |             66 |           78 |      403 |      3 | New York Rangers   |  808 | NYR     | 2856 |       0.5602241 |         0.4203491 |       0.4397759 |         0.5796509 |
+| Active          |          10 | Type 3     |         515 |         1436 |     1400 |        103 |                  0 |        1 |      137 |           NA |    263 |              0 |        160 |                  0 |        7 |      107 |              0 |            0 |       44 |      3 | New York Rangers   |    8 | NYR     |  244 |       0.5614754 |         0.3916350 |       0.4385246 |         0.6083650 |
 
 Preview of Team Total Data
+
+``` r
+# Table about the ActiveFranchise vs Game Types
+knitr::kable(
+ table(team_total$activeFranchise, team_total$gameTypeId),
+  caption = 'ActiveFranchise vs Game Types')
+```
+
+|            | Type 2 | Type 3 |
+| ---------- | -----: | -----: |
+| Active     |     44 |     42 |
+| Non-Active |     13 |      5 |
+
+ActiveFranchise vs Game Types
+
+``` r
+# Table about the wins data for game type = 2
+wins <- id_2
+table_type_2 <- cbind(team_total$activeFranchise)
+
+id_2
+```
+
+    ## # A tibble: 57 x 29
+    ##    activeFranchise franchiseId gameTypeId gamesPlayed goalsAgainst goalsFor
+    ##    <fct>                 <int> <fct>            <int>        <int>    <int>
+    ##  1 Active                   23 Type 2            2937         8708     8647
+    ##  2 Active                   22 Type 2            3732        11779    11889
+    ##  3 Active                   10 Type 2            6504        19863    19864
+    ##  4 Active                   16 Type 2            4115        12054    13527
+    ##  5 Active                   17 Type 2            4115        13893    13678
+    ##  6 Active                    6 Type 2            6570        19001    20944
+    ##  7 Active                   19 Type 2            3889        11767    12333
+    ##  8 Active                    1 Type 2            6731        18092    21632
+    ##  9 Active                   30 Type 2            2139         6390     6093
+    ## 10 Active                    5 Type 2            6460        19805    19793
+    ## # ... with 47 more rows, and 23 more variables: homeLosses <int>,
+    ## #   homeOvertimeLosses <int>, homeTies <int>, homeWins <int>,
+    ## #   lastSeasonId <int>, losses <int>, overtimeLosses <int>, roadLosses <int>,
+    ## #   roadOvertimeLosses <int>, roadTies <int>, roadWins <int>,
+    ## #   shootoutLosses <int>, shootoutWins <int>, shutouts <int>, teamId <int>,
+    ## #   teamName <chr>, ties <int>, triCode <chr>, wins <int>,
+    ## #   HomeWinsPercent <dbl>, HomeLossesPercent <dbl>, RoadWinsPercent <dbl>,
+    ## #   RoadLossesPercent <dbl>
+
+``` r
+id_3
+```
+
+    ## # A tibble: 47 x 29
+    ##    activeFranchise franchiseId gameTypeId gamesPlayed goalsAgainst goalsFor
+    ##    <fct>                 <int> <fct>            <int>        <int>    <int>
+    ##  1 Active                   23 Type 3             257          634      697
+    ##  2 Active                   22 Type 3             272          806      869
+    ##  3 Active                   10 Type 3             515         1436     1400
+    ##  4 Active                   16 Type 3             433         1292     1297
+    ##  5 Active                   17 Type 3             381         1100     1166
+    ##  6 Active                    6 Type 3             651         1836     1894
+    ##  7 Active                   19 Type 3             256          765      763
+    ##  8 Active                    1 Type 3             749         1908     2248
+    ##  9 Active                   30 Type 3             151          372      357
+    ## 10 Active                    5 Type 3             533         1465     1370
+    ## # ... with 37 more rows, and 23 more variables: homeLosses <int>,
+    ## #   homeOvertimeLosses <int>, homeTies <int>, homeWins <int>,
+    ## #   lastSeasonId <int>, losses <int>, overtimeLosses <int>, roadLosses <int>,
+    ## #   roadOvertimeLosses <int>, roadTies <int>, roadWins <int>,
+    ## #   shootoutLosses <int>, shootoutWins <int>, shutouts <int>, teamId <int>,
+    ## #   teamName <chr>, ties <int>, triCode <chr>, wins <int>,
+    ## #   HomeWinsPercent <dbl>, HomeLossesPercent <dbl>, RoadWinsPercent <dbl>,
+    ## #   RoadLossesPercent <dbl>
