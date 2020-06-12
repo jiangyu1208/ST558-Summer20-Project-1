@@ -257,7 +257,5 @@ g2 + geom_bar(fill = 'blue') +
 
 From these two plots above, we can see that the number of 'Active Franchise' is much larger than that of 'Non-Active Franchise' and the number of game type 2 is slightly larger than that of game type 3. Therefore, when it comes to the data about the wins/losses, we can expexct that the number of 'Active Franchise' with game type ID should be the biggest one and we can explore it later.
 
-```{r}
 
-```
 
