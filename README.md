@@ -430,3 +430,43 @@ number of game type 2 is slightly larger than that of game type 3.
 Therefore, when it comes to the data about the wins/losses, we can
 expexct that the number of ‘Active Franchise’ with game type ID should
 be the biggest one and we can explore it later.
+
+``` r
+ggplot(team_total, aes(x=gameTypeId)) + 
+  geom_bar(aes(fill = activeFranchise), 
+  position = 'dodge') + xlab('Type ID') + 
+  scale_fill_discrete(name = "Active Status") +
+  ggtitle("Side-by-Side Bar Plot for Game Types and Active Status")
+```
+
+![](README_files/figure-gfm/unnamed-chunk-5-1.png)<!-- -->
+
+From this side-by-side above, we can clear see that most of the active
+status is active compared with non-active and the number of type 2 is
+much larger than that of type 3.
+
+``` r
+# Boxplots for wins/losses 
+
+ggplot(team_total, aes(x = gameTypeId , y = wins)) + 
+  geom_boxplot() + 
+  geom_jitter(aes(color = activeFranchise)) +
+  ggtitle("Boxplot for Wins") + 
+  xlab('Type ID')
+```
+
+![](README_files/figure-gfm/unnamed-chunk-6-1.png)<!-- -->
+
+``` r
+ggplot(team_total, aes(x = gameTypeId , y = losses)) + 
+  geom_boxplot() + 
+  geom_jitter(aes(color = activeFranchise)) +
+  ggtitle("Boxplot for Losses") + 
+  xlab('Type ID')
+```
+
+![](README_files/figure-gfm/unnamed-chunk-6-2.png)<!-- -->
+
+From these two boxplots above, we can see that the range of type 3 is
+much smaller than type 2 and also the number of active status is bigger
+no matter it is a success or failure.
