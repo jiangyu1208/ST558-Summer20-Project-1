@@ -292,56 +292,57 @@ ActiveFranchise vs Game Types
 
 ``` r
 # Table about the wins data for game type = 2
-wins <- id_2
-table_type_2 <- cbind(team_total$activeFranchise)
+wins2_a <- id_2 %>% select(activeFranchise,wins, homeWins, roadWins) %>%
+  filter(activeFranchise == 'Active') %>% 
+  summarise(
+    Wins = sum(wins), HomeWins = sum(homeWins), RoadWins = sum(roadWins))
 
-id_2
+wins2_non <- id_2 %>% select(activeFranchise,wins, homeWins, roadWins) %>%
+  filter(activeFranchise == 'Non-Active') %>% 
+  summarise(
+    Wins = sum(wins), HomeWins = sum(homeWins), RoadWins = sum(roadWins))
+
+table_type_2_win <- data.frame(
+  Status = c('Active', 'Non-Active'), Wins = c(50938, 1147), HomeWins = c(29436, 718), RoadWins = c(21502, 429))
+
+knitr::kable(
+  (table_type_2_win),
+  caption = 'Detailed Wins for Game Type 2 '
+  )
 ```
 
-    ## # A tibble: 57 x 29
-    ##    activeFranchise franchiseId gameTypeId gamesPlayed goalsAgainst goalsFor
-    ##    <fct>                 <int> <fct>            <int>        <int>    <int>
-    ##  1 Active                   23 Type 2            2937         8708     8647
-    ##  2 Active                   22 Type 2            3732        11779    11889
-    ##  3 Active                   10 Type 2            6504        19863    19864
-    ##  4 Active                   16 Type 2            4115        12054    13527
-    ##  5 Active                   17 Type 2            4115        13893    13678
-    ##  6 Active                    6 Type 2            6570        19001    20944
-    ##  7 Active                   19 Type 2            3889        11767    12333
-    ##  8 Active                    1 Type 2            6731        18092    21632
-    ##  9 Active                   30 Type 2            2139         6390     6093
-    ## 10 Active                    5 Type 2            6460        19805    19793
-    ## # ... with 47 more rows, and 23 more variables: homeLosses <int>,
-    ## #   homeOvertimeLosses <int>, homeTies <int>, homeWins <int>,
-    ## #   lastSeasonId <int>, losses <int>, overtimeLosses <int>, roadLosses <int>,
-    ## #   roadOvertimeLosses <int>, roadTies <int>, roadWins <int>,
-    ## #   shootoutLosses <int>, shootoutWins <int>, shutouts <int>, teamId <int>,
-    ## #   teamName <chr>, ties <int>, triCode <chr>, wins <int>,
-    ## #   HomeWinsPercent <dbl>, HomeLossesPercent <dbl>, RoadWinsPercent <dbl>,
-    ## #   RoadLossesPercent <dbl>
+| Status     |  Wins | HomeWins | RoadWins |
+| :--------- | ----: | -------: | -------: |
+| Active     | 50938 |    29436 |    21502 |
+| Non-Active |  1147 |      718 |      429 |
+
+Detailed Wins for Game Type 2
 
 ``` r
-id_3
+# Table about the loss data for game type = 2
+loss2_a <- id_2 %>% select(activeFranchise,losses, homeLosses, roadLosses) %>%
+  filter(activeFranchise == 'Active') %>% 
+  summarise(
+    Losses = sum(losses), HomeLosses = sum(homeLosses), RoadLosses = sum(roadLosses))
+
+loss2_non <- id_2 %>% 
+  select(activeFranchise,losses, homeLosses, roadLosses) %>%
+  filter(activeFranchise == 'Non-Active') %>% 
+  summarise(
+    Losses = sum(losses), HomeLosses = sum(homeLosses), RoadLosses = sum(roadLosses))
+
+table_type_2_loss <- data.frame(
+  Status = c('Active', 'Non-Active'), Losses = c(45595, 1663), HomeLosses = c(18925, 660), RoadLosses = c(26670, 1003))
+
+knitr::kable(
+  (table_type_2_loss),
+  caption = 'Detailed Losses for Game Type 2 '
+  )
 ```
 
-    ## # A tibble: 47 x 29
-    ##    activeFranchise franchiseId gameTypeId gamesPlayed goalsAgainst goalsFor
-    ##    <fct>                 <int> <fct>            <int>        <int>    <int>
-    ##  1 Active                   23 Type 3             257          634      697
-    ##  2 Active                   22 Type 3             272          806      869
-    ##  3 Active                   10 Type 3             515         1436     1400
-    ##  4 Active                   16 Type 3             433         1292     1297
-    ##  5 Active                   17 Type 3             381         1100     1166
-    ##  6 Active                    6 Type 3             651         1836     1894
-    ##  7 Active                   19 Type 3             256          765      763
-    ##  8 Active                    1 Type 3             749         1908     2248
-    ##  9 Active                   30 Type 3             151          372      357
-    ## 10 Active                    5 Type 3             533         1465     1370
-    ## # ... with 37 more rows, and 23 more variables: homeLosses <int>,
-    ## #   homeOvertimeLosses <int>, homeTies <int>, homeWins <int>,
-    ## #   lastSeasonId <int>, losses <int>, overtimeLosses <int>, roadLosses <int>,
-    ## #   roadOvertimeLosses <int>, roadTies <int>, roadWins <int>,
-    ## #   shootoutLosses <int>, shootoutWins <int>, shutouts <int>, teamId <int>,
-    ## #   teamName <chr>, ties <int>, triCode <chr>, wins <int>,
-    ## #   HomeWinsPercent <dbl>, HomeLossesPercent <dbl>, RoadWinsPercent <dbl>,
-    ## #   RoadLossesPercent <dbl>
+| Status     | Losses | HomeLosses | RoadLosses |
+| :--------- | -----: | ---------: | ---------: |
+| Active     |  45595 |      18925 |      26670 |
+| Non-Active |   1663 |        660 |       1003 |
+
+Detailed Losses for Game Type 2
