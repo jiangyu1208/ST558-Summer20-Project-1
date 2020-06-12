@@ -469,4 +469,35 @@ ggplot(team_total, aes(x = gameTypeId , y = losses)) +
 
 From these two boxplots above, we can see that the range of type 3 is
 much smaller than type 2 and also the number of active status is bigger
-no matter it is a success or failure.
+no matter it is a win or loss.
+
+``` r
+# Scatter plot between wins and failures for status 
+ggplot(team_total, aes(x = wins, y = losses, group = activeFranchise)) +  geom_point(aes(color = activeFranchise)) +     
+   geom_smooth(method = 'lm', color = 'green') + 
+   ggtitle("Wins vs Losses for Total Data")
+```
+
+![](README_files/figure-gfm/unnamed-chunk-7-1.png)<!-- -->
+
+``` r
+# Scatter plot between wins and failures for status for two IDs 
+ggplot(id_2, aes(x = wins, y = losses, group = activeFranchise)) + geom_point(aes(color = activeFranchise)) +     
+   geom_smooth(method = 'lm', color = 'green') +
+   ggtitle("Wins vs Losses for Type ID 2")
+```
+
+![](README_files/figure-gfm/unnamed-chunk-8-1.png)<!-- -->
+
+``` r
+ggplot(id_3, aes(x = wins, y = losses, group = activeFranchise)) + geom_point(aes(color = activeFranchise)) +     
+   geom_smooth(method = 'lm', color = 'green') +
+   ggtitle("Wins vs Losses for Type ID 3")
+```
+
+![](README_files/figure-gfm/unnamed-chunk-8-2.png)<!-- -->
+
+From these three scatter plots above, we can see that most of the points
+are red, corresponding to the fact mentioned before that the majority of
+Franchise status is active. And the relationship between wins and losses
+is almost a straight line.
