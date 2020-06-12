@@ -3,7 +3,8 @@ title: "ST558 Project 1"
 author: "Yu Jiang"
 date: "6/10/2020"
 output: 
-  rmarkdown::github_document
+  rmarkdown::github_document:
+    toc: yes
 ---
 # 1. Describe JSON Data
 
@@ -83,7 +84,7 @@ api <- function(path){
     fromJSON(flatten = TRUE) 
  
  attributes(json_1)
- return((json_1)$data)
+ return(tbl_df(json_1$data))
 }
 
 # Table for /frachise
@@ -102,7 +103,7 @@ ID <- function(arg1, arg2){
     fromJSON(flatten = TRUE)
  
  attributes(json_2)
- return((json_2)$data)
+ return(tbl_df(json_2$data))
 }
 # Table for /franchise-season-records?cayenneExp=franchiseId=ID
 ID('season', '12') %>% head()
@@ -118,12 +119,21 @@ ID('skater', '12') %>% head()
 
 # 4. Data Analysis
 
-```{r, messagae=FALSE}
+```{r, message=FALSE}
 # Load the libraries
-library(DT)
+library(tidyverse)
 library(knitr)
 library(ggplot2)
 
+# Create a new variable
+team_total <- api('franchise-team-totals') %>%
+  select(-c(
+    'id', 'firstSeasonId', 'penaltyMinutes', 'pointPctg', 'points')) %>% mutate(HomeWinsPercent = homeWins/wins, HomeLossesPercent = homeLosses/losses, RoadWinsPercent = roadWins/wins, RoadLossesPercent = roadLosses/losses)
+
+# Table about the preview of team total data
+knitr::kable(
+ head(team_total),
+  caption = 'Preview of Team Total Data')
 
 ```
 
